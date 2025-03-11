@@ -6,14 +6,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class LoginDTO
 {
-    #[Assert\NotBlank(message: "O e-mail é obrigatório.")]
-    #[Assert\Email(message: "O e-mail fornecido não é válido.")]
+    #[Assert\NotBlank(message: "Email is required.")]
+    #[Assert\Email(message: "Invalid email.")]
     public ?string $email;
 
-    #[Assert\NotBlank(message: "A senha é obrigatória.")]
+    #[Assert\NotBlank(message: "Password is required.")]
     public ?string $password;
 
-    public function __construct(?string $email = null, ?string $password = null)
+    public function __construct(?string $email, ?string $password)
     {
         $this->email = $email;
         $this->password = $password;

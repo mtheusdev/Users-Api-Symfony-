@@ -12,7 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\DTO\RegisterDTO;
-
+use App\Service\ValidationService;
 
 #[Route('/auth')]
 class AuthController extends AbstractController
@@ -20,15 +20,18 @@ class AuthController extends AbstractController
     private $entityManager;
     private $passwordHasher;
     private $userRepository;
+    private $validationService;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        ValidationService $validationService
     ) {
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;
+        $this->validationService = $validationService;
     }
 
     #[Route('/register', name: 'user_register', methods: ['POST'])]
@@ -36,26 +39,34 @@ class AuthController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $name = $data['name'] ?? '';
-        $email = $data['email'] ?? '';
-        $password = $data['password'] ?? '';
 
-        $user = new User();
-        $user->setName($name);
-        $user->setEmail($email);
-        $user->setPassword($this->passwordHasher->hashPassword($user, $password));
-        $user->setCreatedAt(new \DateTimeImmutable());
+        $dto = new RegisterDTO(
+            $data['name'] ?? '',
+            $data['email'] ?? '',
+            $data['password'] ?? ''
+        );
 
-        $validations = $validator->validate($user);
+        $errors = $this->validationService->validate($dto);
 
-        if (count($validations) > 0) {
-            return $this->json($validations, Response::HTTP_BAD_REQUEST);
+        if (count($errors) > 0) {
+            return $this->json($errors, Response::HTTP_BAD_REQUEST);
         }
 
-        $existingUser = $this->userRepository->findOneBy(['email' => $email]);
+        $existingUser = $this->userRepository->findOneBy(['email' => $dto->email]);
+
         if ($existingUser) {
             return new Response('Email já está em uso', Response::HTTP_CONFLICT);
         }
+
+
+        $user = new User();
+        $user->setName($dto->name);
+        $user->setEmail($dto->email);
+        $user->setPassword($this->passwordHasher->hashPassword($user,  $dto->password));
+        $user->setCreatedAt(new \DateTimeImmutable());
+
+
+
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

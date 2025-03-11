@@ -14,3 +14,7 @@ services:
 
   App\Controller\AuthController:
     tags: ["controller.service_arguments"]
+
+  App\Service\ValidationService:
+    arguments:
+      $validator: "@validator"
