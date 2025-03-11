@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\DTO\RegisterDTO;
+
 
 #[Route('/auth')]
 class AuthController extends AbstractController
@@ -29,9 +32,31 @@ class AuthController extends AbstractController
     }
 
     #[Route('/register', name: 'user_register', methods: ['POST'])]
-    public function register(Request $request): Response
+    public function register(Request $request, ValidatorInterface $validator): Response
     {
+
         $data = json_decode($request->getContent(), true);
+
+        $dto = new RegisterDTO(
+            $data['name'] ?? null,
+            $data['email'] ?? null,
+            $data['password'] ?? null
+        );
+
+        // Valida o DTO
+        $errors = $validator->validate($dto);
+
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+
+            return $this->json([
+                'success' => false,
+                'errors' => $errorMessages
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         $name = $data['name'] ?? null;
         $email = $data['email'] ?? null;
