@@ -34,48 +34,28 @@ class AuthController extends AbstractController
     #[Route('/register', name: 'user_register', methods: ['POST'])]
     public function register(Request $request, ValidatorInterface $validator): Response
     {
-
         $data = json_decode($request->getContent(), true);
 
-        $dto = new RegisterDTO(
-            $data['name'] ?? null,
-            $data['email'] ?? null,
-            $data['password'] ?? null
-        );
-
-        // Valida o DTO
-        $errors = $validator->validate($dto);
-
-        if (count($errors) > 0) {
-            $errorMessages = [];
-            foreach ($errors as $error) {
-                $errorMessages[] = $error->getMessage();
-            }
-
-            return $this->json([
-                'success' => false,
-                'errors' => $errorMessages
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        $name = $data['name'] ?? null;
-        $email = $data['email'] ?? null;
-        $password = $data['password'] ?? null;
-
-        if (!$name || !$email || !$password) {
-            return new Response('Preencha todos os campos', Response::HTTP_BAD_REQUEST);
-        }
-
-        $existingUser = $this->userRepository->findOneBy(['email' => $email]);
-        if ($existingUser) {
-            return new Response('Email já está em uso', Response::HTTP_CONFLICT);
-        }
+        $name = $data['name'] ?? '';
+        $email = $data['email'] ?? '';
+        $password = $data['password'] ?? '';
 
         $user = new User();
         $user->setName($name);
         $user->setEmail($email);
         $user->setPassword($this->passwordHasher->hashPassword($user, $password));
         $user->setCreatedAt(new \DateTimeImmutable());
+
+        $validations = $validator->validate($user);
+
+        if (count($validations) > 0) {
+            return $this->json($validations, Response::HTTP_BAD_REQUEST);
+        }
+
+        $existingUser = $this->userRepository->findOneBy(['email' => $email]);
+        if ($existingUser) {
+            return new Response('Email já está em uso', Response::HTTP_CONFLICT);
+        }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
