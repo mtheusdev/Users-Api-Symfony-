@@ -17,17 +17,12 @@ class User implements PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "O nome é obrigatório.")]
     private ?string $name = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotBlank(message: "O email é obrigatório.")]
-    #[Assert\Email(message: "O email informado não é válido.")]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "A senha é obrigatória.")]
-    #[Assert\Length(min: 6, minMessage: "A senha deve ter pelo menos 6 caracteres.")]
     private ?string $password = null;
 
     #[ORM\Column]
