@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 

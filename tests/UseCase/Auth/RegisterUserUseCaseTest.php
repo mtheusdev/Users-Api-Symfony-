@@ -4,7 +4,7 @@ namespace App\Tests\UseCase;
 
 use App\DTO\Auth\RegisterDTO;
 use App\Entity\User;
-use App\Repository\User\UserRepository;
+use App\Repository\User\UserRepositoryTestImpl;
 use App\UseCase\Auth\RegisterUserUseCase;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -18,18 +18,14 @@ class RegisterUserUseCaseTest extends TestCase
      */
     private $passwordHasher;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserRepository
-     */
     private $userRepository;
-
-
     private $registerUser;
 
     protected function setUp(): void
     {
         $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
-        $this->userRepository = $this->createMock(UserRepository::class);
+
+        $this->userRepository = new UserRepositoryTestImpl();
 
         $this->registerUser = new RegisterUserUseCase(
             $this->passwordHasher,
@@ -41,9 +37,7 @@ class RegisterUserUseCaseTest extends TestCase
     {
         $existingUser = new User();
         $existingUser->setEmail('test@example.com');
-        $this->userRepository
-            ->method('findOneByEmail')
-            ->willReturn($existingUser);
+        $this->userRepository->save($existingUser);
 
         $dto = new RegisterDTO('John Doe', 'test@example.com', 'password123');
 
@@ -55,17 +49,10 @@ class RegisterUserUseCaseTest extends TestCase
 
     public function testRegisterUserSuccessfully(): void
     {
-        $this->userRepository
-            ->method('findOneByEmail')
-            ->willReturn(null);
 
         $this->passwordHasher
             ->method('hashPassword')
             ->willReturn('hashed_password');
-
-        $this->userRepository
-            ->expects($this->once())
-            ->method('save');
 
         $dto = new RegisterDTO('John Doe', 'john@example.com', 'password123');
 

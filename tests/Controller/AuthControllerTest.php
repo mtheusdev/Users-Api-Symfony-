@@ -65,7 +65,6 @@ class AuthControllerTest extends KernelTestCase
         $this->assertIsArray($content);
         $this->assertNotEmpty($content);
 
-        var_dump($content[0]['message']);
 
         $this->assertEquals('Name is required.', $content[0]['message']);
         $this->assertEquals('Email is required.', $content[1]['message']);

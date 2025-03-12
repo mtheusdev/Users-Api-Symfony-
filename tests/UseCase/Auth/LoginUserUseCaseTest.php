@@ -5,6 +5,7 @@ namespace App\Tests\UseCase\Auth;
 use App\DTO\Auth\LoginDTO;
 use App\Entity\User;
 use App\Repository\User\UserRepository;
+use App\Repository\User\UserRepositoryTestImpl;
 use App\UseCase\Auth\LoginUserUseCase;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -12,10 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LoginUserUseCaseTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserRepository
-     */
-    private $userRepository;
+
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&UserPasswordHasherInterface
@@ -26,10 +24,14 @@ class LoginUserUseCaseTest extends TestCase
      * @var LoginUserUseCase
      */
     private $loginUser;
+    /**
+     * @var UserRepositoryTestImpl
+     */
+    private $userRepository;
 
     protected function setUp(): void
     {
-        $this->userRepository = $this->createMock(UserRepository::class);
+        $this->userRepository = new UserRepositoryTestImpl();
         $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
 
         $this->loginUser = new LoginUserUseCase(
@@ -40,11 +42,12 @@ class LoginUserUseCaseTest extends TestCase
 
     public function testLoginUserWhenEmailNotFound(): void
     {
-        $this->userRepository
-            ->method('findOneByEmail')
-            ->willReturn(null);
+        $existingUser = new User();
+        $existingUser->setEmail('test@example.com');
+        $existingUser->setPassword('password123');
+        $this->userRepository->save($existingUser);
 
-        $dto = new LoginDTO('test@example.com', 'password123');
+        $dto = new LoginDTO('otheremail@example.com', 'password123');
         $response = $this->loginUser->execute($dto);
 
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
@@ -55,10 +58,9 @@ class LoginUserUseCaseTest extends TestCase
     {
         $user = new User();
         $user->setEmail('test@example.com');
+        $user->setPassword('password123');
+        $this->userRepository->save($user);
 
-        $this->userRepository
-            ->method('findOneByEmail')
-            ->willReturn($user);
 
         $this->passwordHasher
             ->method('isPasswordValid')
@@ -75,10 +77,8 @@ class LoginUserUseCaseTest extends TestCase
     {
         $user = new User();
         $user->setEmail('test@example.com');
-
-        $this->userRepository
-            ->method('findOneByEmail')
-            ->willReturn($user);
+        $user->setPassword('password123');
+        $this->userRepository->save($user);
 
         $this->passwordHasher
             ->method('isPasswordValid')
