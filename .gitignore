@@ -20,4 +20,5 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
-
+/coverage
+/coverage-report

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1741780532">
-  <project timestamp="1741780532">
+<coverage generated="1741780715">
+  <project timestamp="1741780715">
     <file name="C:\Users\mathe\Desktop\users_api\src\Controller\AuthController.php">
       <class name="App\Controller\AuthController" namespace="global">
         <metrics complexity="5" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="20" elements="23" coveredelements="23"/>
