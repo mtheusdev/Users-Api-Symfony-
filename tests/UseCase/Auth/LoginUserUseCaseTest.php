@@ -4,7 +4,7 @@ namespace App\Tests\UseCase\Auth;
 
 use App\DTO\Auth\LoginDTO;
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\UseCase\Auth\LoginUserUseCase;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

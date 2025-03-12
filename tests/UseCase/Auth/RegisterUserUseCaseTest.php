@@ -4,9 +4,8 @@ namespace App\Tests\UseCase;
 
 use App\DTO\Auth\RegisterDTO;
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\UseCase\Auth\RegisterUserUseCase;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,7 +56,7 @@ class RegisterUserUseCaseTest extends TestCase
     public function testRegisterUserSuccessfully(): void
     {
         $this->userRepository
-            ->method('findOneBy')
+            ->method('findOneByEmail')
             ->willReturn(null);
 
         $this->passwordHasher

@@ -19,5 +19,7 @@ services:
     arguments:
       $validator: "@validator"
 
+  App\Repository\User\UserRepository: '@App\Repository\User\UserRepositoryImpl'
+
   App\UseCase\RegisterUserUseCase: ~
   App\UseCase\LoginUserUseCase: ~

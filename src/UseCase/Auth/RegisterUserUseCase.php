@@ -4,7 +4,7 @@ namespace App\UseCase\Auth;
 
 use App\DTO\Auth\RegisterDTO;
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
 

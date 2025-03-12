@@ -47,8 +47,8 @@ class AuthController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $dto = new LoginDTO(
-            $data['email'] ?? null,
-            $data['password'] ?? null
+            $data['email'] ?? '',
+            $data['password'] ?? ''
         );
 
         $errors = $this->validationService->validate($dto);
