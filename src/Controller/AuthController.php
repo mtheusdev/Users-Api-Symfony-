@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\DTO\RegisterDTO;
-use App\DTO\LoginDTO;
+use App\DTO\Auth\LoginDTO;
+use App\DTO\Auth\RegisterDTO;
 use App\Service\ValidationService;
-use App\UseCase\RegisterUser;
-use App\UseCase\LoginUser;
+use App\UseCase\Auth\LoginUserUseCase;
+use App\UseCase\Auth\RegisterUserUseCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +23,7 @@ class AuthController extends AbstractController
     }
 
     #[Route('/register', name: 'register', methods: ['POST'])]
-    public function register(Request $request, RegisterUser $registerUser): Response
+    public function register(Request $request, RegisterUserUseCase $registerUser): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -42,7 +42,7 @@ class AuthController extends AbstractController
     }
 
     #[Route('/login', name: 'login', methods: ['POST'])]
-    public function login(Request $request, LoginUser $loginUser): Response
+    public function login(Request $request, LoginUserUseCase $loginUser): Response
     {
         $data = json_decode($request->getContent(), true);
 

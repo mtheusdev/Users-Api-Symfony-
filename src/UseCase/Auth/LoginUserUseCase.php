@@ -1,13 +1,13 @@
 <?php
 
-namespace App\UseCase;
+namespace App\UseCase\Auth;
 
-use App\DTO\LoginDTO;
+use App\DTO\Auth\LoginDTO;
 use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class LoginUser
+class LoginUserUseCase
 {
     private $userRepository;
     private $passwordHasher;
@@ -22,7 +22,7 @@ class LoginUser
 
     public function execute(LoginDTO $dto): Response
     {
-        $user = $this->userRepository->findOneBy(['email' => $dto->email]);
+        $user = $this->userRepository->findOneByEmail($dto->email);
         if (!$user) {
             return new Response('User not found', Response::HTTP_NOT_FOUND);
         }

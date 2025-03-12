@@ -19,5 +19,5 @@ services:
     arguments:
       $validator: "@validator"
 
-  App\UseCase\RegisterUser: ~
-  App\UseCase\LoginUser: ~
+  App\UseCase\RegisterUserUseCase: ~
+  App\UseCase\LoginUserUseCase: ~
