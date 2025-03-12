@@ -10,24 +10,31 @@ use App\UseCase\Auth\RegisterUserUseCase;
 class AuthControllerTest extends KernelTestCase
 {
     private $validationService;
+    /** @var RegisterUserUseCase&\PHPUnit\Framework\MockObject\MockObject $registerUserUseCaseMock */
+    private $registerUserUseCaseMock;
+
+    /** @var LoginUserUseCase&\PHPUnit\Framework\MockObject\MockObject $loginUserUseCaseMock */
+    private $loginUserUseCaseMock;
+
+    private $controller;
 
     protected function setUp(): void
     {
         self::bootKernel();
         $this->validationService = self::getContainer()->get('App\Service\ValidationService');
+        $this->registerUserUseCaseMock = $this->createMock(RegisterUserUseCase::class);
+        $this->loginUserUseCaseMock = $this->createMock(LoginUserUseCase::class);
+        $this->controller = new AuthController($this->validationService);
+        $this->controller->setContainer(self::getContainer());
     }
 
     public function testRegisterUserSuccessfully(): void
     {
-        /** @var RegisterUserUseCase&\PHPUnit\Framework\MockObject\MockObject $registerUserUseCaseMock */
-        $registerUserUseCaseMock = $this->createMock(RegisterUserUseCase::class);
 
-        $registerUserUseCaseMock
+        $this->registerUserUseCaseMock
             ->method('execute')
             ->willReturn(new Response('User created successfully!', Response::HTTP_CREATED));
 
-        $controller = new AuthController($this->validationService);
-        $controller->setContainer(self::getContainer());
 
         $request = new Request([], [], [], [], [], [], json_encode([
             'name' => 'John Doe',
@@ -35,7 +42,7 @@ class AuthControllerTest extends KernelTestCase
             'password' => 'password123'
         ]));
 
-        $response = $controller->register($request, $registerUserUseCaseMock);
+        $response = $this->controller->register($request, $this->registerUserUseCaseMock);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertEquals('User created successfully!', $response->getContent());
@@ -43,20 +50,13 @@ class AuthControllerTest extends KernelTestCase
 
     public function testRegisterWithValidationErrors(): void
     {
-        /** @var RegisterUserUseCase&\PHPUnit\Framework\MockObject\MockObject $registerUserUseCaseMock */
-        $registerUserUseCaseMock = $this->createMock(RegisterUserUseCase::class);
-
-
-        $controller = new AuthController($this->validationService);
-        $controller->setContainer(self::getContainer());
-
         $request = new Request([], [], [], [], [], [], json_encode([
             'name' => '',
             'email' => '',
             'password' => ''
         ]));
 
-        $response = $controller->register($request, $registerUserUseCaseMock);
+        $response =  $this->controller->register($request, $this->registerUserUseCaseMock);
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
         $this->assertJson($response->getContent());
@@ -66,79 +66,72 @@ class AuthControllerTest extends KernelTestCase
         $this->assertNotEmpty($content);
 
 
-        $this->assertEquals('Name is required.', $content[0]['message']);
-        $this->assertEquals('Email is required.', $content[1]['message']);
-        $this->assertEquals('Password is required.', $content[2]['message']);
-        $this->assertEquals('Password must have a minimum of 6 characters.', $content[3]['message']);
+        $expectedErrors = [
+            ['field' => 'name', 'message' => 'Name is required.'],
+            ['field' => 'email', 'message' => 'Email is required.'],
+            ['field' => 'password', 'message' => 'Password is required.'],
+            ['field' => 'password', 'message' => 'Password must have a minimum of 6 characters.']
+        ];
+
+        foreach ($expectedErrors as $index => $error) {
+            $this->assertEquals($error, $content[$index]);
+        }
     }
 
-    // public function testLoginWithValidationErrors(): void
-    // {
-    //     /** @var LoginUserUseCase&\PHPUnit\Framework\MockObject\MockObject $loginUserUseCaseMock */
-    //     $loginUserUseCaseMock = $this->createMock(LoginUserUseCase::class);
-    //     $loginUserUseCaseMock
-    //         ->method('execute')
-    //         ->willReturn(new Response('Login failed', Response::HTTP_UNAUTHORIZED));
+    public function testLoginWithValidationErrors(): void
+    {
 
-    //     // Criando uma solicitação com dados de login inválidos
-    //     $request = new Request([], ['email' => '', 'password' => '']); // Dados inválidos para validação
+        $request = new Request([], [], [], [], [], [], json_encode([
+            'name' => '',
+            'password' => ''
+        ]));
 
-    //     // Instanciando o controlador com o serviço de validação
-    //     $controller = new AuthController($this->validationService);
+        $response =  $this->controller->login($request, $this->loginUserUseCaseMock);
 
-    //     // Chamando o método de login do controlador
-    //     $response = $controller->login($request, $loginUserUseCaseMock);
-
-    //     // Verificando se o status de erro (400) é retornado e as mensagens de erro
-    //     $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-    //     $this->assertJsonStringEqualsJsonString(
-    //         json_encode(['Email is required', 'Password is required']),
-    //         $response->getContent()
-    //     );
-    // }
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertJsonStringEqualsJsonString(
+            json_encode([
+                ["field" => "email", "message" => "Email is required."],
+                ["field" => "password", "message" => "Password is required."]
+            ]),
+            $response->getContent()
+        );
+    }
 
 
-    // public function testLoginSuccessfully(): void
-    // {
-    //     /** @var LoginUserUseCase&\PHPUnit\Framework\MockObject\MockObject $loginUserUseCaseMock */
-    //     $loginUserUseCaseMock = $this->createMock(LoginUserUseCase::class);
-    //     $loginUserUseCaseMock
-    //         ->method('execute')
-    //         ->willReturn(new Response('Login successful', Response::HTTP_OK));
+    public function testLoginSuccessfully(): void
+    {
 
-    //     // Criando uma solicitação com dados de login válidos
-    //     $request = new Request([], ['email' => 'test@example.com', 'password' => 'password123']);
+        $this->loginUserUseCaseMock
+            ->method('execute')
+            ->willReturn(new Response('Login successful', Response::HTTP_OK));
 
-    //     // Instanciando o controlador com o serviço de validação
-    //     $controller = new AuthController($this->validationService);
+        $request = new Request([], [], [], [], [], [], json_encode([
+            'email' => 'email@email.com',
+            'password' => 'password'
+        ]));
 
-    //     // Chamando o método de login do controlador
-    //     $response = $controller->login($request, $loginUserUseCaseMock);
+        $response = $this->controller->login($request, $this->loginUserUseCaseMock);
 
-    //     // Verificando se o login foi bem-sucedido
-    //     $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    //     $this->assertEquals('Login successful', $response->getContent());
-    // }
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('Login successful', $response->getContent());
+    }
 
-    // public function testLoginWithFailedAuthentication(): void
-    // {
-    //     /** @var LoginUserUseCase&\PHPUnit\Framework\MockObject\MockObject $loginUserUseCaseMock */
-    //     $loginUserUseCaseMock = $this->createMock(LoginUserUseCase::class);
-    //     $loginUserUseCaseMock
-    //         ->method('execute')
-    //         ->willReturn(new Response('Invalid credentials', Response::HTTP_UNAUTHORIZED));
+    public function testLoginWithFailedAuthentication(): void
+    {
 
-    //     // Criando uma solicitação com dados inválidos de login
-    //     $request = new Request([], ['email' => 'wrong@example.com', 'password' => 'wrongpassword']);
+        $this->loginUserUseCaseMock
+            ->method('execute')
+            ->willReturn(new Response('Invalid credentials', Response::HTTP_UNAUTHORIZED));
 
-    //     // Instanciando o controlador com o serviço de validação
-    //     $controller = new AuthController($this->validationService);
+        $request = new Request([], [], [], [], [], [], json_encode([
+            'email' => 'wrongemail@email.com',
+            'password' => 'wrongpassword'
+        ]));
 
-    //     // Chamando o método de login do controlador
-    //     $response = $controller->login($request, $loginUserUseCaseMock);
+        $response = $this->controller->login($request, $this->loginUserUseCaseMock);
 
-    //     // Verificando se o status de erro (401) é retornado
-    //     $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-    //     $this->assertEquals('Invalid credentials', $response->getContent());
-    // }
+        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertEquals('Invalid credentials', $response->getContent());
+    }
 }

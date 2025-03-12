@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1741779629">
-  <project timestamp="1741779629">
+<coverage generated="1741780532">
+  <project timestamp="1741780532">
     <file name="C:\Users\mathe\Desktop\users_api\src\Controller\AuthController.php">
       <class name="App\Controller\AuthController" namespace="global">
-        <metrics complexity="5" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="11" elements="23" coveredelements="13"/>
+        <metrics complexity="5" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="20" elements="23" coveredelements="23"/>
       </class>
-      <line num="20" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
-      <line num="22" type="stmt" count="2"/>
+      <line num="20" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="5"/>
+      <line num="22" type="stmt" count="5"/>
       <line num="25" type="method" name="register" visibility="public" complexity="2" crap="2" count="2"/>
       <line num="28" type="stmt" count="2"/>
       <line num="30" type="stmt" count="2"/>
@@ -18,25 +18,25 @@
       <line num="37" type="stmt" count="2"/>
       <line num="38" type="stmt" count="1"/>
       <line num="41" type="stmt" count="1"/>
-      <line num="44" type="method" name="login" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="47" type="stmt" count="0"/>
-      <line num="49" type="stmt" count="0"/>
-      <line num="50" type="stmt" count="0"/>
-      <line num="51" type="stmt" count="0"/>
-      <line num="52" type="stmt" count="0"/>
-      <line num="54" type="stmt" count="0"/>
-      <line num="55" type="stmt" count="0"/>
-      <line num="56" type="stmt" count="0"/>
-      <line num="59" type="stmt" count="0"/>
-      <metrics loc="62" ncloc="62" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="11" elements="23" coveredelements="13"/>
+      <line num="44" type="method" name="login" visibility="public" complexity="2" crap="2" count="3"/>
+      <line num="47" type="stmt" count="3"/>
+      <line num="49" type="stmt" count="3"/>
+      <line num="50" type="stmt" count="3"/>
+      <line num="51" type="stmt" count="3"/>
+      <line num="52" type="stmt" count="3"/>
+      <line num="54" type="stmt" count="3"/>
+      <line num="55" type="stmt" count="3"/>
+      <line num="56" type="stmt" count="1"/>
+      <line num="59" type="stmt" count="2"/>
+      <metrics loc="62" ncloc="62" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="20" elements="23" coveredelements="23"/>
     </file>
     <file name="C:\Users\mathe\Desktop\users_api\src\DTO\Auth\LoginDTO.php">
       <class name="App\DTO\Auth\LoginDTO" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
       </class>
-      <line num="16" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="6"/>
-      <line num="18" type="stmt" count="6"/>
-      <line num="19" type="stmt" count="6"/>
+      <line num="16" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="9"/>
+      <line num="18" type="stmt" count="9"/>
+      <line num="19" type="stmt" count="9"/>
       <metrics loc="22" ncloc="22" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
     </file>
     <file name="C:\Users\mathe\Desktop\users_api\src\DTO\Auth\RegisterDTO.php">
@@ -115,21 +115,21 @@
       <class name="App\Service\ValidationService" namespace="global">
         <metrics complexity="5" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="15" coveredelements="15"/>
       </class>
-      <line num="12" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="5"/>
-      <line num="14" type="stmt" count="5"/>
-      <line num="23" type="method" name="validate" visibility="public" complexity="2" crap="2" count="5"/>
-      <line num="25" type="stmt" count="5"/>
-      <line num="27" type="stmt" count="5"/>
-      <line num="28" type="stmt" count="3"/>
-      <line num="31" type="stmt" count="2"/>
-      <line num="40" type="method" name="getErrors" visibility="private" complexity="2" crap="2" count="3"/>
-      <line num="42" type="stmt" count="3"/>
-      <line num="44" type="stmt" count="3"/>
-      <line num="45" type="stmt" count="3"/>
-      <line num="46" type="stmt" count="3"/>
-      <line num="47" type="stmt" count="3"/>
-      <line num="48" type="stmt" count="3"/>
-      <line num="51" type="stmt" count="3"/>
+      <line num="12" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="8"/>
+      <line num="14" type="stmt" count="8"/>
+      <line num="23" type="method" name="validate" visibility="public" complexity="2" crap="2" count="8"/>
+      <line num="25" type="stmt" count="8"/>
+      <line num="27" type="stmt" count="8"/>
+      <line num="28" type="stmt" count="4"/>
+      <line num="31" type="stmt" count="4"/>
+      <line num="40" type="method" name="getErrors" visibility="private" complexity="2" crap="2" count="4"/>
+      <line num="42" type="stmt" count="4"/>
+      <line num="44" type="stmt" count="4"/>
+      <line num="45" type="stmt" count="4"/>
+      <line num="46" type="stmt" count="4"/>
+      <line num="47" type="stmt" count="4"/>
+      <line num="48" type="stmt" count="4"/>
+      <line num="51" type="stmt" count="4"/>
       <metrics loc="54" ncloc="42" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="15" coveredelements="15"/>
     </file>
     <file name="C:\Users\mathe\Desktop\users_api\src\UseCase\Auth\LoginUserUseCase.php">
@@ -168,6 +168,6 @@
       <line num="41" type="stmt" count="1"/>
       <metrics loc="44" ncloc="44" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="14" coveredelements="14"/>
     </file>
-    <metrics files="11" loc="410" ncloc="398" classes="9" methods="27" coveredmethods="19" conditionals="0" coveredconditionals="0" statements="77" coveredstatements="60" elements="104" coveredelements="79"/>
+    <metrics files="11" loc="410" ncloc="398" classes="9" methods="27" coveredmethods="20" conditionals="0" coveredconditionals="0" statements="77" coveredstatements="69" elements="104" coveredelements="89"/>
   </project>
 </coverage>
