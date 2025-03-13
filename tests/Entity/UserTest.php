@@ -63,4 +63,43 @@ class UserTest extends TestCase
         $user->setPassword('');
         $this->assertEquals('', $user->getPassword());
     }
+
+    public function testGetUsername(): void
+    {
+        $user = new User();
+        $user->setEmail('johndoe@example.com');
+
+        $this->assertEquals('johndoe@example.com', $user->getUsername());
+    }
+
+    public function testGetRoles(): void
+    {
+        $user = new User();
+
+        $this->assertEquals(['ROLE_USER'], $user->getRoles());
+    }
+
+    public function testGetSalt(): void
+    {
+        $user = new User();
+
+        $this->assertNull($user->getSalt());
+    }
+
+    public function testEraseCredentials(): void
+    {
+        $user = new User();
+        $user->eraseCredentials();
+
+
+        $this->assertTrue(true);
+    }
+
+    public function testGetUserIdentifier(): void
+    {
+        $user = new User();
+        $user->setEmail('johndoe@example.com');
+
+        $this->assertEquals('johndoe@example.com', $user->getUserIdentifier());
+    }
 }
