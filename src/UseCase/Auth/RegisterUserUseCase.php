@@ -20,7 +20,6 @@ class RegisterUserUseCase
         UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository,
         JWTTokenManagerInterface $jwtManager
-
     ) {
         $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;

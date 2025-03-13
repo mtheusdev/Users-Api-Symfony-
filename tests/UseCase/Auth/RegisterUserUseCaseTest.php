@@ -6,6 +6,7 @@ use App\DTO\Auth\RegisterDTO;
 use App\Entity\User;
 use App\Repository\User\UserRepositoryTestImpl;
 use App\UseCase\Auth\RegisterUserUseCase;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,18 +19,20 @@ class RegisterUserUseCaseTest extends TestCase
      */
     private $passwordHasher;
 
+    private $jwtManager;
     private $userRepository;
     private $registerUser;
 
     protected function setUp(): void
     {
         $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
-
         $this->userRepository = new UserRepositoryTestImpl();
-
+        $this->jwtManager = $this->createMock(JWTTokenManagerInterface::class);
         $this->registerUser = new RegisterUserUseCase(
             $this->passwordHasher,
-            $this->userRepository
+            $this->userRepository,
+            $this->jwtManager
+
         );
     }
 
@@ -57,8 +60,11 @@ class RegisterUserUseCaseTest extends TestCase
         $dto = new RegisterDTO('John Doe', 'john@example.com', 'password123');
 
         $response = $this->registerUser->execute($dto);
+        $responseData = json_decode($response->getContent(), true);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-        $this->assertEquals('User created successfully!', $response->getContent());
+        $this->assertEquals('User created successfully!', $responseData['message']);
+        $this->assertEquals('john@example.com', $responseData['user']['email']);
+        $this->assertEquals('John Doe', $responseData['user']['name']);
     }
 }

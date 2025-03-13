@@ -6,6 +6,7 @@ use App\DTO\Auth\LoginDTO;
 use App\Entity\User;
 use App\Repository\User\UserRepositoryTestImpl;
 use App\UseCase\Auth\LoginUserUseCase;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +15,10 @@ use function PHPSTORM_META\type;
 
 class LoginUserUseCaseTest extends TestCase
 {
-
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&UserPasswordHasherInterface
      */
     private $passwordHasher;
-
     /**
      * @var LoginUserUseCase
      */
@@ -29,15 +27,16 @@ class LoginUserUseCaseTest extends TestCase
      * @var UserRepositoryTestImpl
      */
     private $userRepository;
-
+    private $jwtManager;
     protected function setUp(): void
     {
         $this->userRepository = new UserRepositoryTestImpl();
         $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
-
+        $this->jwtManager = $this->createMock(JWTTokenManagerInterface::class);
         $this->loginUser = new LoginUserUseCase(
             $this->userRepository,
-            $this->passwordHasher
+            $this->passwordHasher,
+            $this->jwtManager
         );
     }
 
