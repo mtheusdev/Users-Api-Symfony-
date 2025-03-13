@@ -43,7 +43,7 @@ xdebug.start_with_request=yes
    MYSQL_PASSWORD={ALTERE}
    MYSQL_ROOT_PASSWORD={ALTERE}
    
-   DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@{ALTERE}:3306/${MYSQL_DATABASE}?serverVersion=8.0&charset=utf8mb4"
+   DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@{ALTERE}:3307/${MYSQL_DATABASE}?serverVersion=8.0&charset=utf8mb4"
    
    ##Altere todos os dados acima##
    
