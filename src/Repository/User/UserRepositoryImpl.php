@@ -9,9 +9,12 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class UserRepositoryImpl extends ServiceEntityRepository implements UserRepository
 {
+    private $em;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
+        $this->em = $this->getEntityManager();
     }
 
     public function findOneByEmail(string $email): ?User
@@ -21,7 +24,7 @@ class UserRepositoryImpl extends ServiceEntityRepository implements UserReposito
 
     public function save(User $user): void
     {
-        $this->_em->persist($user);
-        $this->_em->flush();
+        $this->em->persist($user);
+        $this->em->flush();
     }
 }
