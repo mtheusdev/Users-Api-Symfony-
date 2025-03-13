@@ -7,32 +7,6 @@
 - PHP 8.0+
 - Composer
 
-## Configuração do Ambiente
-
-Crie um arquivo `.env` na raiz do projeto e configure as variáveis de ambiente conforme necessário:
-
-```
-APP_ENV=dev
-MYSQL_DATABASE={ALTERE}
-MYSQL_USER={ALTERE}
-MYSQL_PASSWORD={ALTERE}
-MYSQL_ROOT_PASSWORD={ALTERE}
-
-DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@{ALTERE}:3306/${MYSQL_DATABASE}?serverVersion=8.0&charset=utf8mb4"
-
-##Altere todos os dados acima##
-
-###> nelmio/cors-bundle ###
-CORS_ALLOW_ORIGIN='^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
-###< nelmio/cors-bundle ###
-
-###> lexik/jwt-authentication-bundle ###
-JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
-JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
-JWT_PASSPHRASE=test
-###< lexik/jwt-authentication-bundle ###
-```
-
 ## Configuração do PHP
 
 Certifique-se de que as seguintes extensões estão habilitadas no seu `php.ini`:
@@ -65,7 +39,7 @@ xdebug.start_with_request=yes
    ```sh
    composer install
    ```
-3. Suba os containers Docker:
+3. Suba os containers Docker: (Antes disso, configure o ambiente e volte para esse passo)
    ```sh
    docker-compose up -d
    ```
@@ -77,6 +51,45 @@ xdebug.start_with_request=yes
    ```sh
    symfony server:start --no-tls
    ```
+
+## Configuração do Ambiente
+Crie um arquivo `.env` na raiz do projeto e configure as variáveis de ambiente conforme necessário:
+
+```
+APP_ENV=dev
+MYSQL_DATABASE={ALTERE}
+MYSQL_USER={ALTERE}
+MYSQL_PASSWORD={ALTERE}
+MYSQL_ROOT_PASSWORD={ALTERE}
+
+DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@{ALTERE}:3306/${MYSQL_DATABASE}?serverVersion=8.0&charset=utf8mb4"
+
+##Altere todos os dados acima##
+
+###> nelmio/cors-bundle ###
+CORS_ALLOW_ORIGIN='^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+###< nelmio/cors-bundle ###
+
+###> lexik/jwt-authentication-bundle ###
+JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
+JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
+JWT_PASSPHRASE=test
+###< lexik/jwt-authentication-bundle ###
+```
+
+## Autenticação JWT
+
+O projeto usa o LexikJWTAuthenticationBundle para autenticação JWT. As chaves de assinatura estão na pasta `jwt/`.
+
+Se necessário, gere novas chaves executando:
+
+```sh
+mkdir -p config/jwt
+openssl genpkey -algorithm RSA -out config/jwt/private.pem -aes256 -pass pass:test
+openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem -passin pass:test
+```
+
+Volte para p passo 3 da configuração do ambiente
 
 ## Scripts Disponíveis
 
@@ -95,14 +108,3 @@ O projeto possui alguns scripts no `composer.json` para facilitar o desenvolvime
   composer start
   ```
 
-## Autenticação JWT
-
-O projeto usa o LexikJWTAuthenticationBundle para autenticação JWT. As chaves de assinatura estão na pasta `jwt/`.
-
-Se necessário, gere novas chaves executando:
-
-```sh
-mkdir -p config/jwt
-openssl genpkey -algorithm RSA -out config/jwt/private.pem -aes256 -pass pass:test
-openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem -passin pass:test
-```
