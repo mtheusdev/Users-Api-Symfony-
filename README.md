@@ -9,7 +9,7 @@
 
 ## Configuração do Ambiente
 
-Crie um arquivo `.env.local` na raiz do projeto e configure as variáveis de ambiente conforme necessário:
+Crie um arquivo `.env` na raiz do projeto e configure as variáveis de ambiente conforme necessário:
 
 ```
 APP_ENV=dev
