@@ -4,6 +4,7 @@ namespace App\UseCase\Auth;
 
 use App\DTO\Auth\LoginDTO;
 use App\Repository\User\UserRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,6 +32,13 @@ class LoginUserUseCase
             return new Response('Invalid email or password', Response::HTTP_UNAUTHORIZED);
         }
 
-        return new Response('User logged in successfully', Response::HTTP_OK);
+        return new JsonResponse([
+            'message' => 'Login successful',
+            'user' => [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'email' => $user->getEmail(),
+            ]
+        ], Response::HTTP_OK);
     }
 }

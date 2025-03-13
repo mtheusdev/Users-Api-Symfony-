@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+use function PHPSTORM_META\type;
+
 class LoginUserUseCaseTest extends TestCase
 {
 
@@ -76,6 +78,7 @@ class LoginUserUseCaseTest extends TestCase
     {
         $user = new User();
         $user->setEmail('test@example.com');
+        $user->setName('Example');
         $user->setPassword('password123');
         $this->userRepository->save($user);
 
@@ -85,8 +88,11 @@ class LoginUserUseCaseTest extends TestCase
 
         $dto = new LoginDTO('test@example.com', 'password123');
         $response = $this->loginUser->execute($dto);
+        $responseData = json_decode($response->getContent(), true);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('User logged in successfully', $response->getContent());
+        $this->assertEquals('Login successful', $responseData['message']);
+        $this->assertEquals('test@example.com', $responseData['user']['email']);
+        $this->assertEquals('Example', $responseData['user']['name']);
     }
 }
