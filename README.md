@@ -53,6 +53,7 @@ xdebug.start_with_request=yes
    ```
 
 ## Configuração do Ambiente
+
 Crie um arquivo `.env` na raiz do projeto e configure as variáveis de ambiente conforme necessário:
 
 ```
@@ -107,4 +108,3 @@ O projeto possui alguns scripts no `composer.json` para facilitar o desenvolvime
   ```sh
   composer start
   ```
-
